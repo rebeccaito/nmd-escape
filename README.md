@@ -18,7 +18,7 @@ cd nmd-escape
 python setup.py install
 
 # run unit tests to see whether install worked
- python -m unittest ./tests/test_annotating_ptvesc.py
+ python -m unittest ./tests/test_annotating_nmd.py
 ```
 
 # Examples
