@@ -9,3 +9,15 @@ The code in this repo contains utility functions for:
 * defining NMD escaping regions based on coding sequence bed files
 * determining total NMD escape size per transcript
 * annotating truncating variants for whether the shifted stop codon would be NMD escaping
+
+
+# Getting Started
+```
+git clone git@github.com:rebeccaito/nmd-escape.git
+cd nmd-escape
+python setup.py install
+
+# run unit tests to see whether install worked
+ python -m unittest ./tests/test_annotating_ptvesc.py
+```
+
