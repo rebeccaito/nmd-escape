@@ -197,35 +197,3 @@ def get_upstream_frameshift(annotated_df, nmd_df):
     annotated_df['is_nmd_frameshift'] = annotated_df.stop_pdot > annotated_df.nmd_pdot_start
 
     return annotated_df
-
-
-#
-# # In[75]:
-#
-#
-# get_upstream_frameshift(frameshifts)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-

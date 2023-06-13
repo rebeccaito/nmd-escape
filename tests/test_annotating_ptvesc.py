@@ -1,6 +1,6 @@
 import unittest
 import os
-from Annotating_PTVesc import *
+from annotating_nmd import *
 
 
 class TestNMD(unittest.TestCase):
