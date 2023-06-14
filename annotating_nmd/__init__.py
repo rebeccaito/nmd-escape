@@ -3,6 +3,23 @@
 
 import numpy as np
 import pandas as pd
+import warnings
+
+
+class IncorrectColumnWarning(Warning):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return repr(self.message)
+
+
+class HGVSpPatternWarning(Warning):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return repr(self.message)
 
 
 def check_bed(bed_df):
@@ -21,7 +38,7 @@ def check_bed(bed_df):
         raise Exception("BED file is not in 6 column format")
 
     if list(bed_df.columns) != col_names and len(bed_df.columns) == 6:
-        Warning(f'Column names in bed dataframe do not match: {col_names}. Renaming now.')
+        warnings.warn(f'Column names in bed dataframe do not match: {col_names}. Renaming now.', IncorrectColumnWarning)
         rename_dict = {}
         for i, key in enumerate(bed_df.columns):
             rename_dict[key] = col_names[i]
@@ -189,18 +206,18 @@ def get_upstream_frameshift(annotated_df, nmd_df):
 
     hgvsp_pattern = '^.*\.\d*:p\..{3}(\d*).{3}fsTer(\d*)'
 
-    # add a check for truncating frameshifts
-    if not annotated_df['HGVSp'].str.contains('fsTer').all():
-        Warning("Some variants do not appear to be frameshifts")
-
     annotated_df[['var_pdot', 'stop_pdot_shift']] = annotated_df.HGVSp.str.extract(hgvsp_pattern)
 
     # add a check for matching expected HGVSp pattern
-    if ((annotated_df.var_pdot == "") & (annotated_df.stop_pdot_shift == "")).all():
-        Warning("No variants meet the expected pattern for HGVSp truncating frameshift variants.\n"
-                "Please refer to https://varnomen.hgvs.org/recommendations/protein/variant/frameshift/")
+    if (
+            (((annotated_df.var_pdot == "") & (annotated_df.stop_pdot_shift == "")).all())
+            | (((annotated_df.var_pdot.isna()) & (annotated_df.stop_pdot_shift.isna())).all())
+    ):
+        warnings.warn("No variants meet the expected pattern for HGVSp truncating frameshift variants.\n"
+                "Please refer to https://varnomen.hgvs.org/recommendations/protein/variant/frameshift/",
+                      HGVSpPatternWarning)
 
-    annotated_df['stop_pdot_shift'].loc[annotated_df.stop_pdot_shift == ""] = np.nan
+    annotated_df['stop_pdot_shift'] = annotated_df.stop_pdot_shift.replace("^$", np.nan, regex=True)
     annotated_df['stop_pdot'] = annotated_df.var_pdot.astype('Int64') + annotated_df.stop_pdot_shift.astype('Int64')
     annotated_df = annotated_df.merge(nmd_df[['transcript_name', 'nmd_pdot_start']],
                                    on='transcript_name', how='left')

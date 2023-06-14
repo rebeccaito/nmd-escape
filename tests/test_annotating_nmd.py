@@ -20,9 +20,11 @@ class TestNMD(unittest.TestCase):
         self.assertEqual(context.exception.args[0], "BED file is not in 6 column format")
 
         # different column names, rename
-        renamed_cds_bed = TestNMD.cds_bed.rename(columns={'chrom': 'chr'}).copy()
-        out_bed = preprocess_bed(renamed_cds_bed.copy())
-        self.assertEqual(list(out_bed.columns), out_columns)
+        with self.assertWarns(Warning) as context:
+            renamed_cds_bed = TestNMD.cds_bed.rename(columns={'chrom': 'chr'}).copy()
+            out_bed = preprocess_bed(renamed_cds_bed.copy())
+            self.assertEqual(list(out_bed.columns), out_columns)
+            self.assertTrue(issubclass(context.warnings[0].category, IncorrectColumnWarning))
 
         # runs correctly, adds size and transcript_name columns
         out_bed = preprocess_bed(TestNMD.cds_bed.copy())
@@ -90,7 +92,6 @@ class TestNMD(unittest.TestCase):
         nmd_df = make_boundaries_df(TestNMD.cds_bed.copy())
         self.assertEqual(len(nmd_df), 4)
 
-
     def test_get_upstream_frameshift(self):
 
         test_variants = [
@@ -129,12 +130,16 @@ class TestNMD(unittest.TestCase):
 
         test_df = pd.DataFrame(test_variants)
         sizes_df = make_cds_size_df(TestNMD.cds_bed.copy())
-        result = get_upstream_frameshift(test_df, sizes_df)
+        result = get_upstream_frameshift(test_df.iloc[:4].copy(), sizes_df)
         self.assertTrue((result.expected_result == result.is_nmd_frameshift).all())
+        self.assertEqual(len(result), 4)
 
         # throw warnings
-        with self.assertWarns(Warning):
-            get_upstream_frameshift(test_df.iloc[-2:], sizes_df)
+        expected_msg = """No variants meet the expected pattern for HGVSp truncating frameshift variants.\n
+        Please refer to https://varnomen.hgvs.org/recommendations/protein/variant/frameshift/"""
+        with self.assertWarns(Warning) as context:
+            get_upstream_frameshift(test_df.iloc[-2:].copy(), sizes_df)
+            self.assertTrue(issubclass(context.warnings[0].category, HGVSpPatternWarning))
 
 
 if __name__ == '__main__':
