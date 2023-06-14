@@ -114,13 +114,27 @@ class TestNMD(unittest.TestCase):
                 'transcript_name': 'NM_138576.4',
                 'HGVSp': 'NP_612808.1:p.Ala512ProfsTer21',
                 'expected_result': True
-            },
+            },{
+                'test_name': 'not a frameshift (invalid)',
+                'transcript_name': 'NM_138576.4',
+                'HGVSp': 'NP_612808.1:p.Ala512Pro',
+                'expected_result': False
+            },{
+                'test_name': 'improperly formatted frameshift',
+                'transcript_name': 'NM_138576.4',
+                'HGVSp': 'I AM A NAUGHTY VARIANT',
+                'expected_result': False
+            }
         ]
 
         test_df = pd.DataFrame(test_variants)
         sizes_df = make_cds_size_df(TestNMD.cds_bed.copy())
         result = get_upstream_frameshift(test_df, sizes_df)
         self.assertTrue((result.expected_result == result.is_nmd_frameshift).all())
+
+        # throw warnings
+        with self.assertWarns(Warning):
+            get_upstream_frameshift(test_df.iloc[-2:], sizes_df)
 
 
 if __name__ == '__main__':

@@ -189,7 +189,17 @@ def get_upstream_frameshift(annotated_df, nmd_df):
 
     hgvsp_pattern = '^.*\.\d*:p\..{3}(\d*).{3}fsTer(\d*)'
 
+    # add a check for truncating frameshifts
+    if not annotated_df['HGVSp'].str.contains('fsTer').all():
+        Warning("Some variants do not appear to be frameshifts")
+
     annotated_df[['var_pdot', 'stop_pdot_shift']] = annotated_df.HGVSp.str.extract(hgvsp_pattern)
+
+    # add a check for matching expected HGVSp pattern
+    if ((annotated_df.var_pdot == "") & (annotated_df.stop_pdot_shift == "")).all():
+        Warning("No variants meet the expected pattern for HGVSp truncating frameshift variants.\n"
+                "Please refer to https://varnomen.hgvs.org/recommendations/protein/variant/frameshift/")
+
     annotated_df['stop_pdot_shift'].loc[annotated_df.stop_pdot_shift == ""] = np.nan
     annotated_df['stop_pdot'] = annotated_df.var_pdot.astype('Int64') + annotated_df.stop_pdot_shift.astype('Int64')
     annotated_df = annotated_df.merge(nmd_df[['transcript_name', 'nmd_pdot_start']],
