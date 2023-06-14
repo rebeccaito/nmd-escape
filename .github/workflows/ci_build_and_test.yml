@@ -30,7 +30,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
       - name: Install dependencies
-        run: pip install .
+        run: python setup.py build
       - name: Test with pytest
         run: python -m unittest ./tests/test_annotating_nmd.py
 
