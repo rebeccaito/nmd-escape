@@ -1,7 +1,9 @@
+![test_status](https://github.com/ritorene/nmd-escape/actions/workflows/ci_build_and_test.yml/badge.svg?branch=main)
+
 # nmd-escape
 Code to determine NMD escaping regions of transcripts and calculate NMD annotation for frameshift variants
 
-![alt text](https://github.com/ritorene/nmd-escape/blob/main/images/nmd.png?raw=true)
+![nmd-escape](https://github.com/ritorene/nmd-escape/blob/main/images/nmd.png?raw=true)
 
 Nonsense-mediated decay (NMD) escaping protein truncating variants can cause Mendelian disease.
 
@@ -12,6 +14,7 @@ The code in this repo contains utility functions for:
 
 
 # Getting Started
+*Note:* This repo supports python version 3.9-3.11
 ```
 git clone git@github.com:rebeccaito/nmd-escape.git
 cd nmd-escape
