@@ -125,18 +125,23 @@ class TestNMD(unittest.TestCase):
                 'transcript_name': 'NM_138576.4',
                 'HGVSp': 'I AM A NAUGHTY VARIANT',
                 'expected_result': False
+            },{
+                'test_name': 'frameshift not truncating',
+                'transcript_name': 'NM_138576.4',
+                'HGVSp': 'NP_612808.1:p.Ala512ProfsTer?',
+                'expected_result': False
             }
         ]
 
         test_df = pd.DataFrame(test_variants)
         sizes_df = make_cds_size_df(TestNMD.cds_bed.copy())
-        result = get_upstream_frameshift(test_df.iloc[:4].copy(), sizes_df)
+        result = get_upstream_frameshift(test_df.copy(), sizes_df)
         self.assertTrue((result.expected_result == result.is_nmd_frameshift).all())
-        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result), 7)
 
         # throw warnings
         with self.assertWarns(Warning) as context:
-            get_upstream_frameshift(test_df.iloc[-2:].copy(), sizes_df)
+            get_upstream_frameshift(test_df.iloc[-3:].copy(), sizes_df)
             self.assertTrue(issubclass(context.warnings[0].category, HGVSpPatternWarning))
 
 
