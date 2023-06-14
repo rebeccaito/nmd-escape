@@ -135,8 +135,6 @@ class TestNMD(unittest.TestCase):
         self.assertEqual(len(result), 4)
 
         # throw warnings
-        expected_msg = """No variants meet the expected pattern for HGVSp truncating frameshift variants.\n
-        Please refer to https://varnomen.hgvs.org/recommendations/protein/variant/frameshift/"""
         with self.assertWarns(Warning) as context:
             get_upstream_frameshift(test_df.iloc[-2:].copy(), sizes_df)
             self.assertTrue(issubclass(context.warnings[0].category, HGVSpPatternWarning))
