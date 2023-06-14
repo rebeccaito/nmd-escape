@@ -6,7 +6,7 @@ import pandas as pd
 import warnings
 
 
-class IncorrectColumnWarning(Warning):
+class ParentWarnings(Warning):
     def __init__(self, message):
         self.message = message
 
@@ -14,12 +14,12 @@ class IncorrectColumnWarning(Warning):
         return repr(self.message)
 
 
-class HGVSpPatternWarning(Warning):
-    def __init__(self, message):
-        self.message = message
+class IncorrectColumnWarning(ParentWarnings):
+    pass
 
-    def __str__(self):
-        return repr(self.message)
+
+class HGVSpPatternWarning(ParentWarnings):
+    pass
 
 
 def check_bed(bed_df):
