@@ -49,6 +49,7 @@ print(sizes_df)
 ```
 
 ## 3. Determine whether frameshifts would be NMD escaping
+For frameshifts and stop gain mutations that occur within the NMD(-) region, there are several variant annotators that will note the variant as NMD escaping. There are situations, however, where a frameshift variant can occur upstream and introduce a stop codon within the NMD(-) region. Below is an example of how one could use HGVSp notation from a typical variant annotator, like VEP or Jannovar, parse where the stop codon is introduced, and determine whether NMD escape is occurring.
 ```
 from annotating_nmd import * 
 
