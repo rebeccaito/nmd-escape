@@ -18,7 +18,7 @@ The code in this repo contains utility functions for:
 ```
 git clone git@github.com:rebeccaito/nmd-escape.git
 cd nmd-escape
-python install -e .
+pip install -e .
 
 # run unit tests to see whether install worked
  python -m unittest ./tests/test_annotating_nmd.py
