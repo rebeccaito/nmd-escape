@@ -85,7 +85,7 @@ class TestNMD(unittest.TestCase):
 
         # test on all transcripts
         cds_df = preprocess_bed(TestNMD.cds_bed.copy())
-        nmd_df = cds_df.groupby('transcript_name').apply(get_nmd_escape_boundaries)
+        nmd_df = cds_df.groupby('transcript_name').apply(get_nmd_escape_boundaries, include_groups=False)
         self.assertEqual(len(nmd_df), 4)
 
         # test convenience wrapper
