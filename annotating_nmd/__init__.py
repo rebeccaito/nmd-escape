@@ -180,7 +180,7 @@ def make_cds_size_df(bed_df):
     if 'cds_size' not in bed_df.columns:
         bed_df = preprocess_bed(bed_df)
 
-    cds_sizes = bed_df.groupby('transcript_name').cds_size.apply(sum).reset_index().rename(columns={0: 'cds_size'})
+    cds_sizes = bed_df.groupby('transcript_name').cds_size.sum().reset_index().rename(columns={0: 'cds_size'})
     nmd_sizes = bed_df.groupby('transcript_name').apply(
         get_nmd_escape_size, include_groups=False
     ).reset_index().rename(columns={0: 'nmd_escape_size'})
