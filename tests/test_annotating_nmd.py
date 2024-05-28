@@ -142,7 +142,7 @@ class TestNMD(unittest.TestCase):
         # throw warnings
         with self.assertWarns(Warning) as context:
             get_upstream_frameshift(test_df.iloc[-3:].copy(), sizes_df)
-            self.assertTrue(issubclass(context.warnings[0].category, HGVSpPatternWarning))
+            self.assertTrue(any([issubclass(warning.category, HGVSpPatternWarning) for warning in context.warnings]))
 
 
 if __name__ == '__main__':
