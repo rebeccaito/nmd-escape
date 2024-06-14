@@ -5,7 +5,7 @@ requires = ["setuptools", "wheel"]
 name = 'nmd-escape'
 version = '0.1'
 dependencies = [
-        'pandas',
+        'pandas >= 2.2',
         'numpy',
     ]
 requires-python = '>= 3.9'
