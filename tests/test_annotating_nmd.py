@@ -85,7 +85,7 @@ class TestNMD(unittest.TestCase):
 
         # test on all transcripts
         cds_df = preprocess_bed(TestNMD.cds_bed.copy())
-        nmd_df = cds_df.groupby('transcript_name').apply(get_nmd_escape_boundaries)
+        nmd_df = cds_df.groupby('transcript_name').apply(get_nmd_escape_boundaries, include_groups=False)
         self.assertEqual(len(nmd_df), 4)
 
         # test convenience wrapper
@@ -142,7 +142,7 @@ class TestNMD(unittest.TestCase):
         # throw warnings
         with self.assertWarns(Warning) as context:
             get_upstream_frameshift(test_df.iloc[-3:].copy(), sizes_df)
-            self.assertTrue(issubclass(context.warnings[0].category, HGVSpPatternWarning))
+            self.assertTrue(any([issubclass(warning.category, HGVSpPatternWarning) for warning in context.warnings]))
 
 
 if __name__ == '__main__':
